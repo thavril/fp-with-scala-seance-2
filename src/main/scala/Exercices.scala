@@ -273,7 +273,7 @@ object Exercices:
   
   /**
    * Exercice 5.2: Note valide
-   * Une note est valide si le score est entre 0 et 100 inclus.
+   * Une note est valide si le score est entre 0 et 20 inclus.
    */
   def noteValide(note: Note): Boolean =
     ???

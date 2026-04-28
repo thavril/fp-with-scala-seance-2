@@ -133,33 +133,33 @@ class ExercicesSpec extends FunSuite:
   // ============================================
   
   val alice = Etudiant("Alice", List(
-    Note("Math", 85),
-    Note("Physique", 90),
-    Note("Chimie", 80)
+    Note("Math", 17),
+    Note("Physique", 18),
+    Note("Chimie", 16)
   ))
   
   val bob = Etudiant("Bob", List(
-    Note("Math", 70),
-    Note("Physique", 65)
+    Note("Math", 14),
+    Note("Physique", 13)
   ))
   
   val charlie = Etudiant("Charlie", List())
   
   test("5.1 - creerEtudiant: crée un étudiant"):
-    val e = creerEtudiant("Test", List(Note("Math", 80)))
+    val e = creerEtudiant("Test", List(Note("Math", 16)))
     assertEquals(e.nom, "Test")
     assertEquals(e.notes.size, 1)
   
   test("5.2 - noteValide: valide une note"):
-    assert(noteValide(Note("Math", 85)))
+    assert(noteValide(Note("Math", 17)))
     assert(noteValide(Note("Math", 0)))
-    assert(noteValide(Note("Math", 100)))
+    assert(noteValide(Note("Math", 20)))
     assert(!noteValide(Note("Math", -1)))
-    assert(!noteValide(Note("Math", 101)))
+    assert(!noteValide(Note("Math", 21)))
   
   test("5.3 - moyenneEtudiant: calcule la moyenne"):
-    assertEqualsDouble(moyenneEtudiant(alice), 85.0, 0.01)
-    assertEqualsDouble(moyenneEtudiant(bob), 67.5, 0.01)
+    assertEqualsDouble(moyenneEtudiant(alice), 17.0, 0.01)
+    assertEqualsDouble(moyenneEtudiant(bob), 13.5, 0.01)
     assertEqualsDouble(moyenneEtudiant(charlie), 0.0, 0.01)
   
   test("5.4 - mentionPourMoyenne: détermine la mention"):
@@ -171,22 +171,22 @@ class ExercicesSpec extends FunSuite:
   
   test("5.5 - mentionEtudiant: mention d'un étudiant"):
     assertEquals(mentionEtudiant(alice), Mention.TresBien)
-    assertEquals(mentionEtudiant(bob), Mention.Insuffisant)
+    assertEquals(mentionEtudiant(bob), Mention.AssezBien)
   
   test("5.6 - meilleureNote: trouve la meilleure note"):
-    assertEquals(meilleureNote(alice), Some(Note("Physique", 90)))
+    assertEquals(meilleureNote(alice), Some(Note("Physique", 18)))
     assertEquals(meilleureNote(charlie), None)
   
   test("5.7 - notesAuDessusMoyenne: filtre les notes"):
     val notesAlice = notesAuDessusMoyenne(alice)
     assertEquals(notesAlice.size, 2)
-    assert(notesAlice.contains(Note("Math", 85)))
-    assert(notesAlice.contains(Note("Physique", 90)))
+    assert(notesAlice.contains(Note("Math", 17)))
+    assert(notesAlice.contains(Note("Physique", 18)))
   
   test("5.8 - rapportEtudiant: génère un rapport"):
     val rapport = rapportEtudiant(alice)
     assert(rapport.contains("Alice"))
-    assert(rapport.contains("85.00"))
+    assert(rapport.contains("17.00"))
     assert(rapport.contains("TresBien"))
   
   
@@ -200,11 +200,11 @@ class ExercicesSpec extends FunSuite:
   
   test("BONUS 2 - notesTries: trie par score décroissant"):
     val tries = notesTries(alice)
-    assertEquals(tries.head.score, 90)
-    assertEquals(tries.last.score, 80)
+    assertEquals(tries.head.score, 18)
+    assertEquals(tries.last.score, 16)
   
   test("BONUS 3 - parMatiere: crée une map"):
     val map = parMatiere(alice)
-    assertEquals(map("Math"), 85)
-    assertEquals(map("Physique"), 90)
-    assertEquals(map("Chimie"), 80)
+    assertEquals(map("Math"), 17)
+    assertEquals(map("Physique"), 18)
+    assertEquals(map("Chimie"), 16)
