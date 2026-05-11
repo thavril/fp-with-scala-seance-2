@@ -1,367 +1,367 @@
 package seance2
 
 /**
- * Séance 2 - Case Classes et Pattern Matching Avancé
+ * Session 2 - Case Classes and Advanced Pattern Matching
  * 
- * Objectifs :
- * - Créer et utiliser des case classes
- * - Comprendre la différence entre tuples et case classes
- * - Maîtriser le pattern matching sur des structures
- * - Utiliser sealed traits et enums pour modéliser des domaines
+ * Objectives:
+ * - Create and use case classes
+ * - Understand the difference between tuples and case classes
+ * - Master pattern matching on structures
+ * - Use sealed traits and enums to model domains
  * 
- * Instructions :
- * 1. Complétez les fonctions marquées avec ???
- * 2. N'utilisez PAS de var, uniquement val
- * 3. Lancez les tests avec: sbt test
+ * Instructions:
+ * 1. Complete the functions marked with ???
+ * 2. Do NOT use var, only val
+ * 3. Run tests with: sbt test
  */
 
 object Exercices:
   
   // ============================================
-  // Partie 1: Introduction aux Case Classes
+  // Part 1: Introduction to Case Classes
   // ============================================
-  // Une case class est comme un tuple NOMMÉ avec des champs nommés.
-  // Elle génère automatiquement: equals, hashCode, toString, copy, apply
+  // A case class is like a NAMED tuple with named fields.
+  // It automatically generates: equals, hashCode, toString, copy, apply
   
   /**
-   * Définition d'une case class simple.
-   * Comparez avec un tuple: (String, Int) vs Personne(nom, age)
+   * Definition of a simple case class.
+   * Compare with a tuple: (String, Int) vs Person(name, age)
    */
-  case class Personne(nom: String, age: Int)
+  case class Person(name: String, age: Int)
   
   /**
-   * Exercice 1.1: Créer une Personne
-   * Créez une instance de Personne avec le nom et l'âge donnés.
+   * Exercise 1.1: Create a Person
+   * Create an instance of Person with the given name and age.
    * 
-   * Exemple: creerPersonne("Alice", 25) == Personne("Alice", 25)
+   * Example: createPerson("Alice", 25) == Person("Alice", 25)
    */
-  def creerPersonne(nom: String, age: Int): Personne =
+  def createPerson(name: String, age: Int): Person =
     ???
   
   /**
-   * Exercice 1.2: Accéder aux champs
-   * Retournez le nom de la personne.
-   * Avec une case class, on accède aux champs par leur nom: personne.nom
+   * Exercise 1.2: Access fields
+   * Return the person's name.
+   * With a case class, you access fields by their name: person.name
    * 
-   * Exemple: getNom(Personne("Alice", 25)) == "Alice"
+   * Example: getName(Person("Alice", 25)) == "Alice"
    */
-  def getNom(personne: Personne): String =
+  def getName(person: Person): String =
     ???
   
   /**
-   * Exercice 1.3: Accéder à l'âge
-   * Retournez l'âge de la personne.
+   * Exercise 1.3: Access age
+   * Return the person's age.
    */
-  def getAge(personne: Personne): Int =
+  def getAge(person: Person): Int =
     ???
   
   /**
-   * Exercice 1.4: Vérifier la majorité
-   * Retourne true si la personne a 18 ans ou plus.
+   * Exercise 1.4: Check if adult
+   * Returns true if the person is 18 years or older.
    */
-  def estMajeur(personne: Personne): Boolean =
+  def isAdult(person: Person): Boolean =
     ???
   
   /**
-   * Exercice 1.5: Utiliser copy
-   * Les case classes ont une méthode copy() pour créer une copie modifiée.
-   * Créez une nouvelle Personne avec le même nom mais un âge augmenté de 1.
+   * Exercise 1.5: Use copy
+   * Case classes have a copy() method to create a modified copy.
+   * Create a new Person with the same name but age increased by 1.
    * 
-   * Exemple: anniversaire(Personne("Alice", 25)) == Personne("Alice", 26)
+   * Example: birthday(Person("Alice", 25)) == Person("Alice", 26)
    */
-  def anniversaire(personne: Personne): Personne =
+  def birthday(person: Person): Person =
     ???
   
   /**
-   * Exercice 1.6: Description formatée
-   * Retourne "X a Y ans" où X est le nom et Y l'âge.
+   * Exercise 1.6: Formatted description
+   * Returns "X is Y years old" where X is the name and Y the age.
    */
-  def decrire(personne: Personne): String =
+  def describe(person: Person): String =
     ???
   
   
   // ============================================
-  // Partie 2: Pattern Matching sur Case Classes
+  // Part 2: Pattern Matching on Case Classes
   // ============================================
-  // Le pattern matching permet de "déstructurer" une case class
-  // pour extraire ses composants.
+  // Pattern matching allows you to "destructure" a case class
+  // to extract its components.
   
   /**
-   * Case class pour un point 2D
+   * Case class for a 2D point
    */
   case class Point(x: Int, y: Int)
   
   /**
-   * Exercice 2.1: Déstructuration simple
-   * Utilisez le pattern matching pour extraire x et y, puis calculez x + y.
+   * Exercise 2.1: Simple destructuring
+   * Use pattern matching to extract x and y, then calculate x + y.
    * 
-   * Syntaxe: point match { case Point(x, y) => ... }
+   * Syntax: point match { case Point(x, y) => ... }
    * 
-   * Exemple: sommeCoordonnees(Point(3, 4)) == 7
+   * Example: sumCoordinates(Point(3, 4)) == 7
    */
-  def sommeCoordonnees(point: Point): Int =
+  def sumCoordinates(point: Point): Int =
     ???
   
   /**
-   * Exercice 2.2: Distance à l'origine
-   * Calculez la distance du point à l'origine (0, 0).
+   * Exercise 2.2: Distance from origin
+   * Calculate the distance from the point to the origin (0, 0).
    * Distance = sqrt(x² + y²)
-   * Utilisez math.sqrt et le pattern matching.
+   * Use math.sqrt and pattern matching.
    */
-  def distanceOrigine(point: Point): Double =
+  def distanceFromOrigin(point: Point): Double =
     ???
   
   /**
-   * Exercice 2.3: Quadrant d'un point
-   * Déterminez dans quel quadrant se trouve le point:
-   * - "I" si x > 0 et y > 0
-   * - "II" si x < 0 et y > 0
-   * - "III" si x < 0 et y < 0
-   * - "IV" si x > 0 et y < 0
-   * - "Origine" si x == 0 et y == 0
-   * - "Axe" si sur un axe (x == 0 ou y == 0 mais pas les deux)
+   * Exercise 2.3: Quadrant of a point
+   * Determine in which quadrant the point is located:
+   * - "I" if x > 0 and y > 0
+   * - "II" if x < 0 and y > 0
+   * - "III" if x < 0 and y < 0
+   * - "IV" if x > 0 and y < 0
+   * - "Origin" if x == 0 and y == 0
+   * - "Axis" if on an axis (x == 0 or y == 0 but not both)
    */
   def quadrant(point: Point): String =
     ???
   
   /**
-   * Case class pour un rectangle défini par deux points
+   * Case class for a rectangle defined by two points
    */
-  case class Rectangle(coinBasGauche: Point, coinHautDroit: Point)
+  case class Rectangle(bottomLeft: Point, topRight: Point)
   
   /**
-   * Exercice 2.4: Aire d'un rectangle
-   * Calculez l'aire du rectangle.
-   * Utilisez le pattern matching imbriqué pour extraire les coordonnées.
+   * Exercise 2.4: Area of a rectangle
+   * Calculate the area of the rectangle.
+   * Use nested pattern matching to extract coordinates.
    * 
-   * Syntaxe: rect match { case Rectangle(Point(x1, y1), Point(x2, y2)) => ... }
+   * Syntax: rect match { case Rectangle(Point(x1, y1), Point(x2, y2)) => ... }
    */
-  def aire(rect: Rectangle): Int =
+  def area(rect: Rectangle): Int =
     ???
   
   /**
-   * Exercice 2.5: Point dans rectangle
-   * Vérifiez si un point est à l'intérieur d'un rectangle (inclus les bords).
+   * Exercise 2.5: Point in rectangle
+   * Check if a point is inside a rectangle (including borders).
    */
-  def contient(rect: Rectangle, point: Point): Boolean =
-    ???
-  
-  
-  // ============================================
-  // Partie 3: Sealed Traits et Enums
-  // ============================================
-  // Un sealed trait permet de définir un ensemble FERMÉ de cas.
-  // Le compilateur peut vérifier l'exhaustivité du pattern matching.
-  
-  /**
-   * Enum pour représenter une couleur de feu tricolore
-   */
-  enum Feu:
-    case Rouge, Orange, Vert
-  
-  /**
-   * Exercice 3.1: Prochain état du feu
-   * Rouge -> Vert -> Orange -> Rouge -> ...
-   */
-  def prochainFeu(feu: Feu): Feu =
-    ???
-  
-  /**
-   * Exercice 3.2: Action selon le feu
-   * Rouge -> "Arrêter"
-   * Orange -> "Ralentir"
-   * Vert -> "Passer"
-   */
-  def actionFeu(feu: Feu): String =
-    ???
-  
-  /**
-   * Sealed trait pour représenter une forme géométrique
-   */
-  sealed trait Forme
-  case class Cercle(rayon: Double) extends Forme
-  case class Carre(cote: Double) extends Forme
-  case class RectangleForme(largeur: Double, hauteur: Double) extends Forme
-  
-  /**
-   * Exercice 3.3: Aire d'une forme
-   * Calculez l'aire selon le type de forme.
-   * - Cercle: π * r²
-   * - Carré: c²
-   * - Rectangle: l * h
-   */
-  def aireForme(forme: Forme): Double =
-    ???
-  
-  /**
-   * Exercice 3.4: Périmètre d'une forme
-   * - Cercle: 2 * π * r
-   * - Carré: 4 * c
-   * - Rectangle: 2 * (l + h)
-   */
-  def perimetreForme(forme: Forme): Double =
-    ???
-  
-  /**
-   * Exercice 3.5: Description d'une forme
-   * Retourne une description textuelle.
-   * - Cercle(5.0) -> "Cercle de rayon 5.0"
-   * - Carre(3.0) -> "Carré de côté 3.0"
-   * - RectangleForme(4.0, 2.0) -> "Rectangle de 4.0 x 2.0"
-   */
-  def descriptionForme(forme: Forme): String =
+  def contains(rect: Rectangle, point: Point): Boolean =
     ???
   
   
   // ============================================
-  // Partie 4: Enum avec Données
+  // Part 3: Sealed Traits and Enums
   // ============================================
-  // Les enums Scala 3 peuvent contenir des données.
+  // A sealed trait defines a CLOSED set of cases.
+  // The compiler can verify exhaustiveness of pattern matching.
   
   /**
-   * Enum pour représenter une expression mathématique simple
+   * Enum to represent a traffic light color
+   */
+  enum TrafficLight:
+    case Red, Yellow, Green
+  
+  /**
+   * Exercise 3.1: Next light state
+   * Red -> Green -> Yellow -> Red -> ...
+   */
+  def nextLight(light: TrafficLight): TrafficLight =
+    ???
+  
+  /**
+   * Exercise 3.2: Action based on light
+   * Red -> "Stop"
+   * Yellow -> "Slow down"
+   * Green -> "Go"
+   */
+  def lightAction(light: TrafficLight): String =
+    ???
+  
+  /**
+   * Sealed trait to represent a geometric shape
+   */
+  sealed trait Shape
+  case class Circle(radius: Double) extends Shape
+  case class Square(side: Double) extends Shape
+  case class RectangleShape(width: Double, height: Double) extends Shape
+  
+  /**
+   * Exercise 3.3: Area of a shape
+   * Calculate the area according to the type of shape.
+   * - Circle: π * r²
+   * - Square: s²
+   * - Rectangle: w * h
+   */
+  def shapeArea(shape: Shape): Double =
+    ???
+  
+  /**
+   * Exercise 3.4: Perimeter of a shape
+   * - Circle: 2 * π * r
+   * - Square: 4 * s
+   * - Rectangle: 2 * (w + h)
+   */
+  def shapePerimeter(shape: Shape): Double =
+    ???
+  
+  /**
+   * Exercise 3.5: Description of a shape
+   * Returns a textual description.
+   * - Circle(5.0) -> "Circle with radius 5.0"
+   * - Square(3.0) -> "Square with side 3.0"
+   * - RectangleShape(4.0, 2.0) -> "Rectangle of 4.0 x 2.0"
+   */
+  def shapeDescription(shape: Shape): String =
+    ???
+  
+  
+  // ============================================
+  // Part 4: Enum with Data
+  // ============================================
+  // Scala 3 enums can contain data.
+  
+  /**
+   * Enum to represent a simple mathematical expression
    */
   enum Expression:
-    case Nombre(valeur: Int)
-    case Addition(gauche: Expression, droite: Expression)
-    case Soustraction(gauche: Expression, droite: Expression)
-    case Multiplication(gauche: Expression, droite: Expression)
+    case Number(value: Int)
+    case Addition(left: Expression, right: Expression)
+    case Subtraction(left: Expression, right: Expression)
+    case Multiplication(left: Expression, right: Expression)
   
   import Expression.*
   
   /**
-   * Exercice 4.1: Évaluer une expression
-   * Calculez le résultat de l'expression récursivement.
+   * Exercise 4.1: Evaluate an expression
+   * Calculate the result of the expression recursively.
    * 
-   * Exemple: evaluer(Addition(Nombre(3), Nombre(4))) == 7
-   *          evaluer(Multiplication(Nombre(2), Addition(Nombre(3), Nombre(1)))) == 8
+   * Example: evaluate(Addition(Number(3), Number(4))) == 7
+   *          evaluate(Multiplication(Number(2), Addition(Number(3), Number(1)))) == 8
    */
-  def evaluer(expr: Expression): Int =
+  def evaluate(expr: Expression): Int =
     ???
   
   /**
-   * Exercice 4.2: Expression vers String
-   * Convertissez une expression en notation infixe avec parenthèses.
+   * Exercise 4.2: Expression to String
+   * Convert an expression to infix notation with parentheses.
    * 
-   * Exemple: versString(Addition(Nombre(3), Nombre(4))) == "(3 + 4)"
-   *          versString(Multiplication(Nombre(2), Nombre(3))) == "(2 * 3)"
+   * Example: toString(Addition(Number(3), Number(4))) == "(3 + 4)"
+   *          toString(Multiplication(Number(2), Number(3))) == "(2 * 3)"
    */
-  def versString(expr: Expression): String =
+  def exprToString(expr: Expression): String =
     ???
   
   
   // ============================================
-  // Partie 5: Mini-Projet - Système de Notes
+  // Part 5: Mini-Project - Grading System
   // ============================================
-  // Utilisons les case classes pour modéliser un système d'évaluation.
+  // Let's use case classes to model a grading system.
   
   /**
-   * Modèle de données pour le système de notes
+   * Data model for the grading system
    */
-  case class Note(matiere: String, score: Int)
-  case class Etudiant(nom: String, notes: List[Note])
+  case class Grade(subject: String, score: Int)
+  case class Student(name: String, grades: List[Grade])
   
   enum Mention:
-    case TresBien, Bien, AssezBien, Passable, Insuffisant
+    case VeryGood, Good, Satisfactory, Passing, Insufficient
   
   /**
-   * Exercice 5.1: Créer un étudiant
-   * Créez un étudiant avec son nom et une liste de notes.
+   * Exercise 5.1: Create a student
+   * Create a student with their name and a list of grades.
    */
-  def creerEtudiant(nom: String, notes: List[Note]): Etudiant =
+  def createStudent(name: String, grades: List[Grade]): Student =
     ???
   
   /**
-   * Exercice 5.2: Note valide
-   * Une note est valide si le score est entre 0 et 100 inclus.
+   * Exercise 5.2: Valid grade
+   * A grade is valid if the score is between 0 and 100 inclusive.
    */
-  def noteValide(note: Note): Boolean =
+  def isValidGrade(grade: Grade): Boolean =
     ???
   
   /**
-   * Exercice 5.3: Moyenne d'un étudiant
-   * Calculez la moyenne des scores de l'étudiant.
-   * Si l'étudiant n'a pas de notes, retournez 0.0.
+   * Exercise 5.3: Student average
+   * Calculate the average of the student's scores.
+   * If the student has no grades, return 0.0.
    * 
-   * Indice: utilisez .map et .sum sur les listes
+   * Hint: use .map and .sum on lists
    */
-  def moyenneEtudiant(etudiant: Etudiant): Double =
+  def studentAverage(student: Student): Double =
     ???
   
   /**
-   * Exercice 5.4: Mention selon la moyenne
-   * >= 16: TresBien
-   * >= 14: Bien
-   * >= 12: AssezBien
-   * >= 10: Passable
-   * < 10: Insuffisant
+   * Exercise 5.4: Mention based on average
+   * >= 80: VeryGood
+   * >= 70: Good
+   * >= 60: Satisfactory
+   * >= 50: Passing
+   * < 50: Insufficient
    */
-  def mentionPourMoyenne(moyenne: Double): Mention =
+  def mentionForAverage(average: Double): Mention =
     ???
   
   /**
-   * Exercice 5.5: Mention d'un étudiant
-   * Calculez la mention de l'étudiant à partir de ses notes.
-   * Utilisez les fonctions précédentes (composition).
+   * Exercise 5.5: Student mention
+   * Calculate the student's mention from their grades.
+   * Use the previous functions (composition).
    */
-  def mentionEtudiant(etudiant: Etudiant): Mention =
+  def studentMention(student: Student): Mention =
     ???
   
   /**
-   * Exercice 5.6: Meilleure note
-   * Trouvez la note avec le score le plus élevé.
-   * Retourne None si l'étudiant n'a pas de notes.
+   * Exercise 5.6: Best grade
+   * Find the grade with the highest score.
+   * Returns None if the student has no grades.
    * 
-   * Indice: utilisez .maxByOption sur les listes
+   * Hint: use .maxByOption on lists
    */
-  def meilleureNote(etudiant: Etudiant): Option[Note] =
+  def bestGrade(student: Student): Option[Grade] =
     ???
   
   /**
-   * Exercice 5.7: Notes au-dessus de la moyenne
-   * Retourne la liste des notes dont le score est >= à la moyenne de l'étudiant.
+   * Exercise 5.7: Grades above average
+   * Return the list of grades whose score is >= the student's average.
    * 
-   * Indice: utilisez .filter sur les listes
+   * Hint: use .filter on lists
    */
-  def notesAuDessusMoyenne(etudiant: Etudiant): List[Note] =
+  def gradesAboveAverage(student: Student): List[Grade] =
     ???
   
   /**
-   * Exercice 5.8: Rapport d'étudiant
-   * Génère un rapport textuel pour l'étudiant:
-   * "Étudiant: X
-   *  Moyenne: Y
+   * Exercise 5.8: Student report
+   * Generate a text report for the student:
+   * "Student: X
+   *  Average: Y
    *  Mention: Z"
    * 
-   * Où Y est arrondi à 2 décimales.
+   * Where Y is rounded to 2 decimal places.
    */
-  def rapportEtudiant(etudiant: Etudiant): String =
+  def studentReport(student: Student): String =
     ???
   
   
   // ============================================
-  // BONUS: Exercices Avancés
+  // BONUS: Advanced Exercises
   // ============================================
   
   /**
-   * BONUS 1: Comparer deux étudiants
-   * Retourne le nom de l'étudiant avec la meilleure moyenne.
-   * En cas d'égalité, retourne le premier.
+   * BONUS 1: Compare two students
+   * Return the name of the student with the higher average.
+   * In case of a tie, return the first one.
    */
-  def meilleurEtudiant(e1: Etudiant, e2: Etudiant): String =
+  def betterStudent(s1: Student, s2: Student): String =
     ???
   
   /**
-   * BONUS 2: Trier les notes par score décroissant
-   * Retourne les notes triées du plus haut au plus bas score.
+   * BONUS 2: Sort grades by score descending
+   * Return grades sorted from highest to lowest score.
    */
-  def notesTries(etudiant: Etudiant): List[Note] =
+  def sortedGrades(student: Student): List[Grade] =
     ???
   
   /**
-   * BONUS 3: Résumé par matière
-   * Retourne une Map où la clé est le nom de la matière
-   * et la valeur est le score.
+   * BONUS 3: Summary by subject
+   * Return a Map where the key is the subject name
+   * and the value is the score.
    */
-  def parMatiere(etudiant: Etudiant): Map[String, Int] =
+  def bySubject(student: Student): Map[String, Int] =
     ???

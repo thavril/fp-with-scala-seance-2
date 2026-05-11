@@ -1,26 +1,26 @@
-# Séance 2 - Case Classes et Pattern Matching Avancé
+# Session 2 - Case Classes and Advanced Pattern Matching
 
-**Durée** : 3h  
-**Date** : 28 avril 2025
+**Duration**: 3h  
+**Date**: April 28, 2025
 
-## Objectifs d'apprentissage
+## Learning Objectives
 
-À la fin de cette séance, vous serez capables de :
+By the end of this session, you will be able to:
 
-- Créer et utiliser des **case classes**
-- Comprendre les avantages des case classes vs tuples
-- **Déstructurer** des données avec le pattern matching
-- Modéliser des domaines avec **sealed traits** et **enums**
-- Composer des fonctions pour résoudre des problèmes complexes
+- Create and use **case classes**
+- Understand the advantages of case classes vs tuples
+- **Destructure** data with pattern matching
+- Model domains with **sealed traits** and **enums**
+- Compose functions to solve complex problems
 
-## Rappel : Séance 1
+## Recap: Session 1
 
-- `val` vs `var` (immutabilité)
-- Types simples : `Int`, `Double`, `String`, `Boolean`
-- Récursion
-- Pattern matching sur valeurs simples
+- `val` vs `var` (immutability)
+- Simple types: `Int`, `Double`, `String`, `Boolean`
+- Recursion
+- Pattern matching on simple values
 
-## Mise en route
+## Getting Started
 
 ```bash
 cd seance-2
@@ -28,248 +28,248 @@ sbt compile
 sbt test
 ```
 
-## Organisation de la séance
+## Session Organization
 
-### Partie 1 : Introduction aux Case Classes (30 min)
+### Part 1: Introduction to Case Classes (30 min)
 
-**Qu'est-ce qu'une case class ?**
+**What is a case class?**
 
-Une case class est une classe spéciale qui génère automatiquement :
-- Un constructeur (pas besoin de `new`)
-- Des accesseurs pour chaque champ
+A case class is a special class that automatically generates:
+- A constructor (no need for `new`)
+- Accessors for each field
 - `equals`, `hashCode`, `toString`
-- Une méthode `copy` pour créer des copies modifiées
+- A `copy` method to create modified copies
 
 ```scala
-// Définition d'une case class
-case class Voiture(marque: String, annee: Int)
+// Definition of a case class
+case class Car(brand: String, year: Int)
 
-// Création (pas besoin de new)
-val maVoiture = Voiture("Peugeot", 2020)
+// Creation (no need for new)
+val myCar = Car("Peugeot", 2020)
 
-// Accès aux champs par leur nom
-maVoiture.marque    // "Peugeot"
-maVoiture.annee     // 2020
+// Access fields by name
+myCar.brand    // "Peugeot"
+myCar.year     // 2020
 
-// Copie modifiée (l'original ne change pas !)
-val voitureNeuve = maVoiture.copy(annee = 2024)
-// maVoiture.annee est toujours 2020
+// Modified copy (the original doesn't change!)
+val newCar = myCar.copy(year = 2024)
+// myCar.year is still 2020
 
-// Comparaison par valeur (pas par référence)
-Voiture("Peugeot", 2020) == Voiture("Peugeot", 2020)  // true
+// Comparison by value (not by reference)
+Car("Peugeot", 2020) == Car("Peugeot", 2020)  // true
 ```
 
-**Case class vs Tuple : pourquoi préférer les case classes ?**
+**Case class vs Tuple: why prefer case classes?**
 
 ```scala
-// Tuple : anonyme, accès par position (_1, _2...)
+// Tuple: anonymous, access by position (_1, _2...)
 val t: (String, Int) = ("Peugeot", 2020)
-t._1  // "Peugeot" - mais que représente _1 ?
-t._2  // 2020 - et _2 ?
+t._1  // "Peugeot" - but what does _1 represent?
+t._2  // 2020 - and _2?
 
-// Case class : nommé, code auto-documenté
-val v: Voiture = Voiture("Peugeot", 2020)
-v.marque  // "Peugeot" - clair !
-v.annee   // 2020 - explicite !
+// Case class: named, self-documenting code
+val v: Car = Car("Peugeot", 2020)
+v.brand  // "Peugeot" - clear!
+v.year   // 2020 - explicit!
 ```
 
-**Exercices 1.1 - 1.6** : Manipulation de `Personne`
+**Exercises 1.1 - 1.6**: Manipulating `Person`
 
-### Partie 2 : Pattern Matching sur Case Classes (45 min)
+### Part 2: Pattern Matching on Case Classes (45 min)
 
-**Déstructuration : extraire les composants**
+**Destructuring: extracting components**
 
-Le pattern matching permet d'extraire les champs d'une case class :
+Pattern matching allows extracting fields from a case class:
 
 ```scala
-case class Coordonnees(latitude: Double, longitude: Double)
+case class Coordinates(latitude: Double, longitude: Double)
 
-def hemisphere(c: Coordonnees): String = c match
-  case Coordonnees(lat, _) if lat > 0 => "Nord"
-  case Coordonnees(lat, _) if lat < 0 => "Sud"
-  case Coordonnees(0, _) => "Équateur"
+def hemisphere(c: Coordinates): String = c match
+  case Coordinates(lat, _) if lat > 0 => "North"
+  case Coordinates(lat, _) if lat < 0 => "South"
+  case Coordinates(0, _) => "Equator"
 ```
 
-**Valeurs spécifiques dans le pattern**
+**Specific values in patterns**
 
 ```scala
-case class Produit(nom: String, prix: Double)
+case class Product(name: String, price: Double)
 
-def categoriePrix(p: Produit): String = p match
-  case Produit(_, 0) => "Gratuit"
-  case Produit(_, prix) if prix < 10 => "Pas cher"
-  case Produit(_, prix) if prix < 100 => "Moyen"
-  case _ => "Cher"
+def priceCategory(p: Product): String = p match
+  case Product(_, 0) => "Free"
+  case Product(_, price) if price < 10 => "Cheap"
+  case Product(_, price) if price < 100 => "Medium"
+  case _ => "Expensive"
 ```
 
-**Pattern matching imbriqué**
+**Nested pattern matching**
 
-Quand une case class contient une autre case class :
+When a case class contains another case class:
 
 ```scala
-case class Adresse(ville: String, codePostal: String)
-case class Entreprise(nom: String, siege: Adresse)
+case class Address(city: String, postalCode: String)
+case class Company(name: String, headquarters: Address)
 
-def estParisienne(e: Entreprise): Boolean = e match
-  case Entreprise(_, Adresse("Paris", _)) => true
-  case Entreprise(_, Adresse(_, cp)) if cp.startsWith("75") => true
+def isParisian(c: Company): Boolean = c match
+  case Company(_, Address("Paris", _)) => true
+  case Company(_, Address(_, pc)) if pc.startsWith("75") => true
   case _ => false
 ```
 
-**Exercices 2.1 - 2.5** : Manipulation de `Point` et `Rectangle`
+**Exercises 2.1 - 2.5**: Manipulating `Point` and `Rectangle`
 
-### Partie 3 : Sealed Traits et Enums (45 min)
+### Part 3: Sealed Traits and Enums (45 min)
 
-**Enum simple : un ensemble fini de valeurs**
+**Simple enum: a finite set of values**
 
 ```scala
-enum Jour:
-  case Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche
+enum Day:
+  case Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 
-def estWeekend(j: Jour): Boolean = j match
-  case Jour.Samedi | Jour.Dimanche => true
+def isWeekend(d: Day): Boolean = d match
+  case Day.Saturday | Day.Sunday => true
   case _ => false
 ```
 
-**Sealed trait : types algébriques**
+**Sealed trait: algebraic types**
 
-Un `sealed trait` définit un ensemble **fermé** de sous-types.
-Le compilateur vérifie que vous gérez tous les cas !
+A `sealed trait` defines a **closed** set of subtypes.
+The compiler verifies that you handle all cases!
 
 ```scala
 sealed trait Animal
-case class Chien(nom: String, race: String) extends Animal
-case class Chat(nom: String, interieur: Boolean) extends Animal
-case class Oiseau(nom: String, envergure: Double) extends Animal
+case class Dog(name: String, breed: String) extends Animal
+case class Cat(name: String, indoor: Boolean) extends Animal
+case class Bird(name: String, wingspan: Double) extends Animal
 
-def decrireAnimal(a: Animal): String = a match
-  case Chien(nom, race) => s"$nom est un chien de race $race"
-  case Chat(nom, true) => s"$nom est un chat d'intérieur"
-  case Chat(nom, false) => s"$nom est un chat d'extérieur"
-  case Oiseau(nom, env) => s"$nom est un oiseau avec ${env}cm d'envergure"
-  // Si vous oubliez un cas, le compilateur vous avertit !
+def describeAnimal(a: Animal): String = a match
+  case Dog(name, breed) => s"$name is a $breed dog"
+  case Cat(name, true) => s"$name is an indoor cat"
+  case Cat(name, false) => s"$name is an outdoor cat"
+  case Bird(name, ws) => s"$name is a bird with ${ws}cm wingspan"
+  // If you forget a case, the compiler warns you!
 ```
 
-**Pourquoi "sealed" ?**
+**Why "sealed"?**
 
 ```scala
-// Sans sealed : n'importe qui peut ajouter un sous-type
-// Le compilateur ne peut pas vérifier l'exhaustivité
+// Without sealed: anyone can add a subtype
+// The compiler cannot verify exhaustiveness
 
-// Avec sealed : seuls les sous-types dans ce fichier existent
-// Le compilateur peut vérifier que tous les cas sont gérés
+// With sealed: only subtypes in this file exist
+// The compiler can verify that all cases are handled
 ```
 
-**Exercices 3.1 - 3.5** : `Feu` (tricolore) et `Forme` (géométrique)
+**Exercises 3.1 - 3.5**: `TrafficLight` and `Shape` (geometric)
 
-### Partie 4 : Enum avec Données (30 min)
+### Part 4: Enum with Data (30 min)
 
-Les enums Scala 3 peuvent contenir des données différentes selon le cas :
+Scala 3 enums can contain different data depending on the case:
 
 ```scala
 enum Message:
-  case Texte(contenu: String)
-  case Image(url: String, largeur: Int, hauteur: Int)
-  case Fichier(nom: String, taille: Long)
+  case Text(content: String)
+  case Image(url: String, width: Int, height: Int)
+  case File(name: String, size: Long)
 
 import Message.*
 
-def decrireMessage(m: Message): String = m match
-  case Texte(c) => s"Message texte: $c"
-  case Image(url, l, h) => s"Image ${l}x${h} depuis $url"
-  case Fichier(nom, taille) => s"Fichier $nom (${taille} octets)"
+def describeMessage(m: Message): String = m match
+  case Text(c) => s"Text message: $c"
+  case Image(url, w, h) => s"Image ${w}x${h} from $url"
+  case File(name, size) => s"File $name ($size bytes)"
 
-// Création
-val m1 = Texte("Bonjour")
+// Creation
+val m1 = Text("Hello")
 val m2 = Image("http://...", 800, 600)
 ```
 
-**Exercices 4.1 - 4.2** : `Expression` mathématique
+**Exercises 4.1 - 4.2**: Mathematical `Expression`
 
-### Partie 5 : Mini-Projet - Système de Notes (30 min)
+### Part 5: Mini-Project - Grading System (30 min)
 
-Vous allez construire un système d'évaluation d'étudiants en utilisant :
+You will build a student evaluation system using:
 
 ```scala
-case class Note(matiere: String, score: Int)
-case class Etudiant(nom: String, notes: List[Note])
+case class Grade(subject: String, score: Int)
+case class Student(name: String, grades: List[Grade])
 
 enum Mention:
-  case TresBien, Bien, AssezBien, Passable, Insuffisant
+  case VeryGood, Good, Satisfactory, Passing, Insufficient
 ```
 
-**Exercices 5.1 - 5.8** : créer, valider, calculer moyennes, mentions, rapports
+**Exercises 5.1 - 5.8**: create, validate, calculate averages, mentions, reports
 
-## Opérations sur les listes (aide-mémoire)
+## List Operations (cheat sheet)
 
-Pour le mini-projet, voici les opérations `List` utiles :
+For the mini-project, here are useful `List` operations:
 
 ```scala
-val nombres = List(10, 20, 30, 40)
+val numbers = List(10, 20, 30, 40)
 
-// Transformer chaque élément
-nombres.map(n => n * 2)           // List(20, 40, 60, 80)
+// Transform each element
+numbers.map(n => n * 2)           // List(20, 40, 60, 80)
 
-// Filtrer selon une condition
-nombres.filter(n => n > 15)       // List(20, 30, 40)
+// Filter by condition
+numbers.filter(n => n > 15)       // List(20, 30, 40)
 
-// Somme des éléments
-nombres.sum                        // 100
+// Sum of elements
+numbers.sum                        // 100
 
-// Nombre d'éléments
-nombres.size                       // 4
+// Number of elements
+numbers.size                       // 4
 
-// Maximum (retourne Option)
-nombres.maxByOption(n => n)        // Some(40)
+// Maximum (returns Option)
+numbers.maxByOption(n => n)        // Some(40)
 
-// Trier
-nombres.sortBy(n => n)             // List(10, 20, 30, 40)
-nombres.sortBy(n => -n)            // List(40, 30, 20, 10)
+// Sort
+numbers.sortBy(n => n)             // List(10, 20, 30, 40)
+numbers.sortBy(n => -n)            // List(40, 30, 20, 10)
 
-// Liste de tuples vers Map
+// List of tuples to Map
 List(("a", 1), ("b", 2)).toMap     // Map("a" -> 1, "b" -> 2)
 ```
 
-## Structure du projet
+## Project Structure
 
 ```
 seance-2/
 ├── src/
 │   ├── main/scala/
-│   │   └── Exercices.scala   # À compléter
+│   │   └── Exercices.scala   # To complete
 │   └── test/scala/
 │       └── ExercicesSpec.scala
 ├── build.sbt
 └── README.md
 ```
 
-## Commandes utiles
+## Useful Commands
 
 ```bash
-sbt test              # Lance tous les tests
-sbt "testOnly *1.1*"  # Teste un exercice spécifique
-sbt ~test             # Mode watch
+sbt test              # Run all tests
+sbt "testOnly *1.1*"  # Test a specific exercise
+sbt ~test             # Watch mode
 sbt console           # REPL
 ```
 
-## Points clés à retenir
+## Key Points to Remember
 
-| Concept | Syntaxe |
-|---------|---------|
-| Case class | `case class Nom(champ: Type)` |
-| Création | `Nom(valeur)` (pas de `new`) |
-| Accès | `instance.champ` |
-| Copie | `instance.copy(champ = nouvelleValeur)` |
-| Enum simple | `enum Nom: case A, B, C` |
+| Concept | Syntax |
+|---------|--------|
+| Case class | `case class Name(field: Type)` |
+| Creation | `Name(value)` (no `new`) |
+| Access | `instance.field` |
+| Copy | `instance.copy(field = newValue)` |
+| Simple enum | `enum Name: case A, B, C` |
 | Sealed trait | `sealed trait X` + `case class Y extends X` |
-| Déstructuration | `x match { case Nom(a, b) => ... }` |
+| Destructuring | `x match { case Name(a, b) => ... }` |
 
-## Prochaine séance
+## Next Session
 
-**Séance 3** : Monades et Fonctions d'Ordre Supérieur (1)
-- Implémenter `MyList`
-- Comprendre `map`, `flatMap`, `filter`, `fold`
+**Session 3**: Monads and Higher-Order Functions (1)
+- Implement `MyList`
+- Understand `map`, `flatMap`, `filter`, `fold`
 
 ---
 
-*FP with Scala - V2 - Séance 2*
+*FP with Scala - V2 - Session 2*
